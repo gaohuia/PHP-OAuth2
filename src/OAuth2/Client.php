@@ -138,6 +138,13 @@ class Client
     protected $curl_options = array();
 
     /**
+     *
+     * @var string
+     */
+    protected $client_id_field = 'client_id';
+    protected $client_secret_field = 'client_secret';
+
+    /**
      * Construct
      *
      * @param string $client_id Client ID
@@ -193,7 +200,7 @@ class Client
     {
         $parameters = array_merge(array(
             'response_type' => 'code',
-            'client_id'     => $this->client_id,
+            $this->client_id_field     => $this->client_id,
             'redirect_uri'  => $redirect_uri
         ), $extra_parameters);
         return $auth_endpoint . '?' . http_build_query($parameters, null, '&');
@@ -228,11 +235,11 @@ class Client
         switch ($this->client_auth) {
             case self::AUTH_TYPE_URI:
             case self::AUTH_TYPE_FORM:
-                $parameters['client_id'] = $this->client_id;
-                $parameters['client_secret'] = $this->client_secret;
+                $parameters[$this->client_id_field] = $this->client_id;
+                $parameters[$this->client_secret_field] = $this->client_secret;
                 break;
             case self::AUTH_TYPE_AUTHORIZATION_BASIC:
-                $parameters['client_id'] = $this->client_id;
+                $parameters[$this->client_id_field] = $this->client_id;
                 $http_headers['Authorization'] = 'Basic ' . base64_encode($this->client_id .  ':' . $this->client_secret);
                 break;
             default:
