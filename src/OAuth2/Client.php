@@ -141,8 +141,8 @@ class Client
      *
      * @var string
      */
-    protected $client_id_field = 'client_id';
-    protected $client_secret_field = 'client_secret';
+    protected $client_id_param_name = 'client_id';
+    protected $client_secret_param_name = 'client_secret';
 
     /**
      * Construct
@@ -200,7 +200,7 @@ class Client
     {
         $parameters = array_merge(array(
             'response_type' => 'code',
-            $this->client_id_field     => $this->client_id,
+            $this->client_id_param_name     => $this->client_id,
             'redirect_uri'  => $redirect_uri
         ), $extra_parameters);
         return $auth_endpoint . '?' . http_build_query($parameters, null, '&');
@@ -235,11 +235,11 @@ class Client
         switch ($this->client_auth) {
             case self::AUTH_TYPE_URI:
             case self::AUTH_TYPE_FORM:
-                $parameters[$this->client_id_field] = $this->client_id;
-                $parameters[$this->client_secret_field] = $this->client_secret;
+                $parameters[$this->client_id_param_name] = $this->client_id;
+                $parameters[$this->client_secret_param_name] = $this->client_secret;
                 break;
             case self::AUTH_TYPE_AUTHORIZATION_BASIC:
-                $parameters[$this->client_id_field] = $this->client_id;
+                $parameters[$this->client_id_param_name] = $this->client_id;
                 $http_headers['Authorization'] = 'Basic ' . base64_encode($this->client_id .  ':' . $this->client_secret);
                 break;
             default:
@@ -499,6 +499,18 @@ class Client
     public function setAccessTokenParamName($name)
     {
         $this->access_token_param_name = $name;
+    }
+
+    public function setClientIdParamName($name)
+    {
+        $this->client_id_param_name = $name;
+        return $this;
+    }
+
+    public function setClientSecretParamName($name)
+    {
+        $this->client_secret_param_name = $name;
+        return $this;
     }
 
     /**
